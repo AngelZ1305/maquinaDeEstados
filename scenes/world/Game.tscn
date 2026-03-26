@@ -1,37 +1,170 @@
-[gd_scene load_steps=4 format=3 uid="uid://b7jwtlk7ief6x"]
+[gd_scene load_steps=12 format=3 uid="uid://b7jwtlk7ief6x"]
 
+[ext_resource type="Texture2D" uid="uid://cevxmyfm5new6" path="res://assets/background/background-village.png" id="1_4h86v"]
 [ext_resource type="PackedScene" uid="uid://c8mve840x2rph" path="res://scenes/player/Player.tscn" id="1_u6vth"]
 [ext_resource type="PackedScene" uid="uid://nxe7o5yxoltq" path="res://scenes/enemy/enemy_goblin.tscn" id="2_12gbh"]
+[ext_resource type="Script" uid="uid://dwekepu1babxj" path="res://scripts/hud.gd" id="3_rbr8k"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_tscxm"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_rbr8k"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_4h86v"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4h86v"]
+bg_color = Color(0.101960786, 0.101960786, 0.18039216, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7cdt5"]
+bg_color = Color(0.18039216, 0.8, 0.44313726, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bbqqk"]
+bg_color = Color(0.101960786, 0.101960786, 0.18039216, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l3glt"]
+bg_color = Color(0.90588236, 0.29803923, 0.23529412, 1)
 
 [node name="Game" type="Node2D"]
 
 [node name="World" type="Node2D" parent="."]
 
 [node name="Background" type="Sprite2D" parent="World"]
-
-[node name="ColorRect" type="ColorRect" parent="World/Background"]
-offset_right = 1280.0
-offset_bottom = 720.0
-color = Color(0.101960786, 0.101960786, 0.18039216, 1)
+position = Vector2(640.5, 357.5)
+scale = Vector2(0.8313802, 0.69824225)
+texture = ExtResource("1_4h86v")
 
 [node name="Ground" type="StaticBody2D" parent="World"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="World/Ground"]
-position = Vector2(0, 500)
+position = Vector2(0, 600)
 shape = SubResource("WorldBoundaryShape2D_tscxm")
 
-[node name="ColorRect" type="ColorRect" parent="World/Ground"]
-offset_top = 490.0
+[node name="GroundHitBoxDebug" type="ColorRect" parent="World/Ground"]
+visible = false
+offset_top = 590.0
 offset_right = 1280.0
-offset_bottom = 530.0
+offset_bottom = 630.0
 color = Color(0.1764706, 0.3529412, 0.15294118, 1)
 
+[node name="WallLeft" type="StaticBody2D" parent="World"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/WallLeft"]
+position = Vector2(0, 360)
+rotation = 1.5707964
+shape = SubResource("WorldBoundaryShape2D_rbr8k")
+
+[node name="WallRight" type="StaticBody2D" parent="World"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/WallRight"]
+position = Vector2(1280, 360)
+rotation = -1.5707964
+shape = SubResource("WorldBoundaryShape2D_4h86v")
+
 [node name="Player" parent="World" instance=ExtResource("1_u6vth")]
-position = Vector2(640, 450)
+position = Vector2(640, 570)
 
 [node name="Enemy" parent="World" instance=ExtResource("2_12gbh")]
-position = Vector2(900, 470)
+position = Vector2(900, 570)
 
 [node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="HUD" type="CanvasLayer" parent="."]
+script = ExtResource("3_rbr8k")
+
+[node name="PlayerHUD" type="HBoxContainer" parent="HUD"]
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 220.0
+offset_bottom = 71.0
+theme_override_constants/separation = 8
+
+[node name="PlayerIcon" type="TextureRect" parent="HUD/PlayerHUD"]
+layout_mode = 2
+
+[node name="PlayerVBox" type="VBoxContainer" parent="HUD/PlayerHUD"]
+layout_mode = 2
+
+[node name="PlayerName" type="Label" parent="HUD/PlayerHUD/PlayerVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Player"
+
+[node name="PlayerHealthBar" type="ProgressBar" parent="HUD/PlayerHUD/PlayerVBox"]
+custom_minimum_size = Vector2(200, 20)
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_4h86v")
+theme_override_styles/fill = SubResource("StyleBoxFlat_7cdt5")
+value = 100.0
+show_percentage = false
+
+[node name="EnemyHUD" type="HBoxContainer" parent="HUD"]
+offset_left = 1060.0
+offset_top = 20.0
+offset_right = 1100.0
+offset_bottom = 74.0
+theme_override_constants/separation = 8
+
+[node name="EnemyVBox" type="VBoxContainer" parent="HUD/EnemyHUD"]
+layout_mode = 2
+
+[node name="EnemyName" type="Label" parent="HUD/EnemyHUD/EnemyVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Goblin"
+
+[node name="EnemyHealthBar" type="ProgressBar" parent="HUD/EnemyHUD/EnemyVBox"]
+custom_minimum_size = Vector2(200, 20)
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_bbqqk")
+theme_override_styles/fill = SubResource("StyleBoxFlat_l3glt")
+value = 100.0
+show_percentage = false
+
+[node name="EnemyIcon" type="TextureRect" parent="HUD/EnemyHUD"]
+layout_mode = 2
+
+[node name="GameOverScreen" type="Control" parent="HUD"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" type="ColorRect" parent="HUD/GameOverScreen"]
+layout_mode = 0
+offset_right = 1280.0
+offset_bottom = 720.0
+color = Color(0, 0, 0, 0.70000005)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HUD/GameOverScreen"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -130.0
+offset_top = -56.5
+offset_right = 130.0
+offset_bottom = 56.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="ResultLabel" type="Label" parent="HUD/GameOverScreen/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "Game Over"
+horizontal_alignment = 1
+
+[node name="RestartButton" type="Button" parent="HUD/GameOverScreen/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Restart"
+
+[node name="QuitButton" type="Button" parent="HUD/GameOverScreen/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Quit"
