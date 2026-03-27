@@ -3,11 +3,13 @@ class_name EnemyAttackState
 extends State
 
 const ATTACK_RANGE  := 80.0
-var ATTACK_DAMAGE: Array[int] = [10, 20, 30]  # rápido, fuerte, especial
+var ATTACK_DAMAGE: Array[int] = [10, 20, 30]
+
+# Mapeo de tipo a animación
+const ATTACK_ANIMS := ["attack-1", "attack-2", "attack"]
 
 func enter() -> void:
 	player.velocity.x = 0
-	player.play_animation("attack")
 
 	# Elegir ataque aleatorio
 	var tipo := randi_range(0, 2)
@@ -17,6 +19,9 @@ func enter() -> void:
 		0: print("Enemigo: golpe rápido — ", damage, " daño")
 		1: print("Enemigo: golpe fuerte — ", damage, " daño")
 		2: print("Enemigo: ataque especial — ", damage, " daño")
+
+	# Reproducir la animación correspondiente al tipo
+	player.play_animation(ATTACK_ANIMS[tipo])
 
 	# Aplicar daño al jugador si está en rango
 	var target = player.player_ref

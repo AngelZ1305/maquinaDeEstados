@@ -3,7 +3,7 @@ extends CharacterBody2D
 
 const GRAVITY := 1400.0
 
-var hp         := 80
+var hp         := 100
 var max_hp     := 80
 var player_ref : CharacterBody2D = null
 
